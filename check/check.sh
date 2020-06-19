@@ -27,6 +27,7 @@ openssl dgst -sha256 -signature rfc-6376-signature -verify rfc-6376-rsa-public.p
 
 export PUBLIC_KEY='p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDwIRP/UC3SBsEmGqZ9ZJW3/DkMoGeLnQg1fWn7/zYtIxN2SnFCjxOCKG9v3b4jYfcTNh5ijSsq631uBItLa7od+v/RtdC2UzJ1lWT947qR+Rcac2gbto/NMqJ0fzfVjH4OuKhitdY9tf6mcwGjaNBcWToIMmPSPDdQPNUYckcQ2QIDAQAB'
 
+echo "rfc-6376-email.txt (with errata)"
 PYTHONPATH=.. python ../dkim/dkimverify.py -v < rfc-6376-email.txt
 
 # unset PUBLIC_KEY
@@ -48,13 +49,18 @@ PYTHONPATH=.. python ../dkim/dkimverify.py -v < rfc-6376-email.txt
 # s2048._domainkey.yahoo.ca is an alias for s2048._domainkey.yahoo.com.
 # s2048._domainkey.yahoo.com descriptive text "k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuoWufgbWw58MczUGbMv176RaxdZGOMkQmn8OOJ/HGoQ6dalSMWiLaj8IMcHC1cubJx2gz" "iAPQHVPtFYayyLA4ayJUSNk10/uqfByiU8qiPCE4JSFrpxflhMIKV4bt+g1uHw7wLzguCf4YAoR6XxUKRsAoHuoF7M+v6bMZ/X1G+viWHkBl4UfgJQ6O8F1ckKKoZ5K" "qUkJH5pDaqbgs+F3PpyiAUQfB6EEzOA1KMPRWJGpzgPtKoukDcQuKUw9GAul7kSIyEcizqrbaUKNLGAmz0elkqRnzIsVpz6jdT1/YV5Ri6YUOQ5sN5bqNzZ8TxoQlkb" "VRy6eKOjUnoSSTmSAhwIDAQAB;"
 export PUBLIC_KEY="p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuoWufgbWw58MczUGbMv176RaxdZGOMkQmn8OOJ/HGoQ6dalSMWiLaj8IMcHC1cubJx2gziAPQHVPtFYayyLA4ayJUSNk10/uqfByiU8qiPCE4JSFrpxflhMIKV4bt+g1uHw7wLzguCf4YAoR6XxUKRsAoHuoF7M+v6bMZ/X1G+viWHkBl4UfgJQ6O8F1ckKKoZ5KqUkJH5pDaqbgs+F3PpyiAUQfB6EEzOA1KMPRWJGpzgPtKoukDcQuKUw9GAul7kSIyEcizqrbaUKNLGAmz0elkqRnzIsVpz6jdT1/YV5Ri6YUOQ5sN5bqNzZ8TxoQlkbVRy6eKOjUnoSSTmSAhwIDAQAB"
+echo "mail-tester-test-3vcvxqshy.txt, index 0"
 PYTHONPATH=.. python ../dkim/dkimverify.py -v --index 0 < mail-tester-test-3vcvxqshy.txt
 
+echo "mail-tester-test-3vcvxqshy-outgoing.txt"
+PYTHONPATH=.. python ../dkim/dkimverify.py -v < mail-tester-test-3vcvxqshy-outgoing.txt
 
 # This fails in verifying the signature.  Why?
 # $ host -t TXT 20200614._domainkey.mlcirm.biz
 # 20200614._domainkey.mlcirm.biz descriptive text "k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy7pQV1Q9OCu4NwDQTMWcggcq4eBMOL1lMHbc3JCc+RlJ8HHfU8qUwcjvOXNQKqSKccE6IP0Rz3SA0B0/FSvNfrVMRZyMh9stUFX3WwIpNmrSDDqW0cQ4onQ/QR2o/0gTFZHB82wAXtCgZYiVWnF2Bmkm7zR7PPQcMyOV2R82poPvNRTcXMMPLrB9qHPQboKUCLF+oV3hRP" "A44ynL5U7tpZWZC9AJ5GdfKGr1Q+NHpS+sa4j2bTQrvDCTI1Bo7YSqUMQDmllZkIK/IHgh4SzwkVpDE7kfkUPN+SU0ViGulWNxgJL9CfcFIrT7O/yeaxl+gdaCFgLr5Okx3cf+iLfIXwIDAQAB"
 export PUBLIC_KEY="p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy7pQV1Q9OCu4NwDQTMWcggcq4eBMOL1lMHbc3JCc+RlJ8HHfU8qUwcjvOXNQKqSKccE6IP0Rz3SA0B0/FSvNfrVMRZyMh9stUFX3WwIpNmrSDDqW0cQ4onQ/QR2o/0gTFZHB82wAXtCgZYiVWnF2Bmkm7zR7PPQcMyOV2R82poPvNRTcXMMPLrB9qHPQboKUCLF+oV3hRPA44ynL5U7tpZWZC9AJ5GdfKGr1Q+NHpS+sa4j2bTQrvDCTI1Bo7YSqUMQDmllZkIK/IHgh4SzwkVpDE7kfkUPN+SU0ViGulWNxgJL9CfcFIrT7O/yeaxl+gdaCFgLr5Okx3cf+iLfIXwIDAQAB"
+
+echo "mail-tester-test-3vcvxqshy.txt, index 1"
 PYTHONPATH=.. python ../dkim/dkimverify.py -v --index 1 < mail-tester-test-3vcvxqshy.txt || :
 
 echo "

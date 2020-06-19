@@ -1,0 +1,37 @@
+From ilatypov@yahoo.ca Sun Jun 14 22:32:38 2020
+Received: by smtp418.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 41fd684a3d0c1f23d03697e451f0bf04;
+          Mon, 15 Jun 2020 02:32:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mlcirm.biz;
+	 s=20200614; h=Date:From:Message-Id:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Subject:To:Sender:Reply-To:Cc:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=15pFrAvOGi+eHKJgB6psh6iIBCbvYSuhPj+wQn6C7Ss=; b=X6s0EqaiO+a5WQRE7urSo6s6uk
+	/Wl9wrYsj+O7v0fvweufeE2VdPjCTw5RyR4p+NawWvSpt7DSwhOQCaeB0srMi9AY3DEg9mVZcIySD
+	R9wlLOILCJst/kj3k/JSnEWclLl283x1mir5nixc3j5QxnyVnU0q1IItkU6OTKquLKGydX7vabg5G
+	NASQRO0+Hn2e/8Bq9BRQki4Y9rpovIhtiASZJuOvbuLLXC6fC3khxF6LrGjQXIgVkxa9//kKHvsdh
+	NIdZO1s2ewY4x3N3+4Fp0GmSZ9p+yp1AJew6IKUazqrUNgt3EsUAw/IrqKH2L6ftxitb8cZPtSgct
+	aqH7cAHg==;
+Received: from latypil by mlcirm.biz with local (Exim 4.92)
+	(envelope-from <ilatypov@yahoo.ca>)
+	id 1jkevO-0006aV-79
+	for test-3vcvxqshy@srv1.mail-tester.com; Sun, 14 Jun 2020 22:32:38 -0400
+To: test-3vcvxqshy@srv1.mail-tester.com
+Subject: foobar6
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <E1jkevO-0006aV-79@mlcirm.biz>
+From: ILGUIZ LATYPOV <ilatypov@yahoo.ca>
+Date: Sun, 14 Jun 2020 22:32:38 -0400
+X-SMTP-MAILFROM: ilatypov@yahoo.ca
+X-SMTP-RCPTTO: test-3vcvxqshy@srv1.mail-tester.com
+References: <E1jkevO-0006aV-79.ref@mlcirm.biz>
+X-Mailer: WebService/1.1.16119 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
+Status: RO
+Content-Length: 8
+Lines: 1
+
+testing
+
