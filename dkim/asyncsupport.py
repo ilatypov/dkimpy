@@ -66,8 +66,15 @@ async def get_txt_async(name, timeout=5):
         return None
 
 
-async def load_pk_from_dns_async(name, dnsfunc, timeout=5):
-  s = await dnsfunc(name, timeout=timeout)
+async def load_pk_from_dns_async(name, dnsfunc, timeout=5, logger=None):
+  if "PUBLIC_KEY" in os.environ:
+    s = os.environ["PUBLIC_KEY"]
+    if logger is not None:
+      logger.info("Using public key for %s from PUBLIC_KEY: %s" % (name, s,))
+  else:
+    s = await dnsfunc(name, timeout=timeout)
+    if logger is not None:
+      logger.info("public key for %s: %s" % (name, s,))
   pk, keysize, ktag, seqtlsrpt = dkim.evaluate_pk(name, s)
   return pk, keysize, ktag, seqtlsrpt
 
@@ -84,9 +91,10 @@ class DKIM(dkim.DKIM):
   #: @param dnsfunc: interface to dns
   async def verify_sig(self, sig, include_headers, sig_header, dnsfunc):
     name = sig[b's'] + b"._domainkey." + sig[b'd'] + b"."
+    print("async self.logger %s" % (self.logger,))
     try:
       self.pk, self.keysize, self.ktag, self.seqtlsrpt = await load_pk_from_dns_async(name,
-              dnsfunc, timeout=self.timeout)
+              dnsfunc, timeout=self.timeout, logger=self.logger)
     except dkim.KeyFormatError as e:
       self.logger.error("%s" % e)
       return False

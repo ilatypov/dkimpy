@@ -34,16 +34,22 @@ def main():
         epilog="message to be verified follows commands on stdin")
     parser.add_argument('--index', metavar='N', type=int, default=0,
         help='Index of DKIM signature header to verify: default=0')
+    parser.add_argument('-v', action='store_true',
+        help='Verbose: default=False')
     args=parser.parse_args()
     if sys.version_info[0] >= 3:
         # Make sys.stdin a binary stream.
         sys.stdin = sys.stdin.detach()
 
     message = sys.stdin.read()
-    verbose = '-v' in sys.argv
+    verbose = args.v
+    import logging
+    logging.basicConfig(format='%(asctime)-15s %(message)s')
+    logger = logging.getLogger('dkimpy')
+    logger.setLevel(logging.DEBUG)
     if verbose:
-        import logging
-        d = dkim.DKIM(message, logger=logging)
+        d = dkim.DKIM(message, logger=logger, debug_content=True)
+        logger.debug("debug level set")
     else:
         d = dkim.DKIM(message)
     res = d.verify(args.index)

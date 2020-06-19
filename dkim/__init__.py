@@ -39,6 +39,7 @@ import re
 import sys
 import time
 import binascii
+import os
 
 # only needed for arc
 try:
@@ -72,13 +73,14 @@ from dkim.crypto import (
 try:
     from dkim.dnsplug import get_txt
 except ImportError:
-    try:
-        import aiodns
-        from dkim.asyncsupport import get_txt_async as get_txt
-    except:
-        # Only true if not using async
-        def get_txt(s,timeout=5):
-            raise RuntimeError("DKIM.verify requires DNS or dnspython module")
+    if sys.version_info >= (3, 5):
+        try:
+            import aiodns
+            from dkim.asyncsupport import get_txt_async as get_txt
+        except:
+            # Only true if not using async
+            def get_txt(s,timeout=5):
+                raise RuntimeError("DKIM.verify requires DNS or dnspython module")
 from dkim.util import (
     get_default_logger,
     InvalidTagValueList,
@@ -425,17 +427,20 @@ def fold(header, namelen=0, linesep=b'\r\n'):
             return pre + header
 
 
-def evaluate_pk(name, s):
+def evaluate_pk(name, s, logger):
   if not s:
       raise KeyFormatError("missing public key: %s"%name)
   try:
       if type(s) is str:
         s = s.encode('ascii')
+      logger.info("parsing public key")
       pub = parse_tag_value(s)
   except InvalidTagValueList as e:
+      logger.info("parser raised InvalidTagValueList %s" % (e,))
       raise KeyFormatError(e)
   try:
       if pub[b'v'] != b'DKIM1':
+          logger.info("bad version %s" % (pub[b'v'],))
           raise KeyFormatError("bad version")
   except KeyError as e:
       # Version not required in key record: RFC 6376 3.6.1
@@ -455,11 +460,14 @@ def evaluate_pk(name, s):
           pk = parse_public_key(base64.b64decode(pub[b'p']))
           keysize = bitsize(pk['modulus'])
       except KeyError:
+          logger.info("incomplete public key %s" % (s,))
           raise KeyFormatError("incomplete public key: %s" % s)
       except (TypeError,UnparsableKeyError) as e:
+          logger.info("could not parse public key (%s): %s" % (pub[b'p'], e))
           raise KeyFormatError("could not parse public key (%s): %s" % (pub[b'p'],e))
       ktag = b'rsa'
   if pub[b'k'] != b'rsa' and pub[b'k'] != b'ed25519':
+      logger.info("unknown algorithm in k= tag: {0}".format(pub[b'k']))
       raise KeyFormatError('unknown algorithm in k= tag: {0}'.format(pub[b'k']))
   seqtlsrpt = False
   try:
@@ -468,6 +476,7 @@ def evaluate_pk(name, s):
           pk = None
           keysize = None
           ktag = None
+          logger.info('unknown service type in s= tag: {0}'.format(pub[b's']))
           raise KeyFormatError('unknown service type in s= tag: {0}'.format(pub[b's']))
       elif pub[b's'] == b'tlsrpt':
           seqtlsrpt = True
@@ -477,9 +486,19 @@ def evaluate_pk(name, s):
   return pk, keysize, ktag, seqtlsrpt
 
 
-def load_pk_from_dns(name, dnsfunc=get_txt, timeout=5):
-  s = dnsfunc(name, timeout=timeout)
-  pk, keysize, ktag, seqtlsrpt = evaluate_pk(name, s)
+def load_pk_from_dns(name, dnsfunc=get_txt, timeout=5, logger=None):
+  if "PUBLIC_KEY" in os.environ:
+    s = os.environ["PUBLIC_KEY"]
+    if logger is not None:
+      logger.info("Using public key for %s from PUBLIC_KEY: %s" % (name, s,))
+  else:
+    s = dnsfunc(name, timeout=timeout)
+    if logger is not None:
+      logger.info("public key for %s: %s" % (name, s,))
+  if logger is not None:
+    logger.info("Calling evaluate_pk")
+  pk, keysize, ktag, seqtlsrpt = evaluate_pk(name, s, logger)
+  logger.info("returning pk %s, keysize %s, ktag %s, seqtlsrpt %s" % (pk, keysize, ktag, seqtlsrpt))
   return pk, keysize, ktag, seqtlsrpt
 
 
@@ -506,6 +525,7 @@ class DomainSigner(object):
         logger = get_default_logger()
     self.logger = logger
     self.debug_content = debug_content and logger.isEnabledFor(logging.DEBUG)
+    print("self.debug_content %s" % (self.debug_content,))
     if signature_algorithm not in HASH_ALGORITHMS:
         raise ParameterError(
             "Unsupported signature algorithm: "+signature_algorithm)
@@ -692,6 +712,7 @@ class DomainSigner(object):
   def verify_sig_process(self, sig, include_headers, sig_header, dnsfunc):
     """Non-async sensitive verify_sig elements.  Separated to avoid async code
     duplication."""
+    print("self.logger %s" % (self.logger,))
     # RFC 8460 MAY ignore signatures without tlsrpt Service Type
     if self.tlsrpt == 'strict' and not self.seqtlsrpt:
         raise ValidationError("Message is tlsrpt and Service Type is not tlsrpt")
@@ -742,12 +763,14 @@ class DomainSigner(object):
     if self.debug_content:
         self.logger.debug("signed for %s: %r" % (sig_header[0], h.hashed()))
     signature = base64.b64decode(re.sub(br"\s+", b"", sig[b'b']))
+    self.logger.debug("signature %s" % (signature,))
     if self.ktag == b'rsa':
         try:
-            res = RSASSA_PKCS1_v1_5_verify(h, signature, self.pk)
+            res = RSASSA_PKCS1_v1_5_verify(h, signature, self.pk, self.logger)
             self.logger.debug("%s valid: %s" % (sig_header[0], res))
             if res and self.keysize < self.minkey:
                 raise KeyFormatError("public key too small: %d" % self.keysize)
+            self.logger.info("res %s" % (res,))
             return res
         except (TypeError,DigestTooLargeError) as e:
             raise KeyFormatError("digest too large for modulus: %s"%e)
@@ -769,15 +792,17 @@ class DomainSigner(object):
   #: @param dnsfunc: interface to dns
   def verify_sig(self, sig, include_headers, sig_header, dnsfunc):
     name = sig[b's'] + b"._domainkey." + sig[b'd'] + b"."
+    self.logger.debug("verify_sig calling load_pk_from_dns with name %s" % (name,))
     try:
       self.pk, self.keysize, self.ktag, self.seqtlsrpt = load_pk_from_dns(name,
-              dnsfunc, timeout=self.timeout)
+              dnsfunc, timeout=self.timeout, logger=self.logger)
     except KeyFormatError as e:
-      self.logger.error("%s" % e)
+      self.logger.error("KeyFormatError: {0}".format(e))
       return False
     except binascii.Error as e:
-      self.logger.error('KeyFormatError: {0}'.format(e))
+      self.logger.error('binascii.Error: {0}'.format(e))
       return False
+    self.logger.debug("verify_sig calling verify_sig_process")
     return self.verify_sig_process(sig, include_headers, sig_header, dnsfunc)
 
 
@@ -938,6 +963,7 @@ class DKIM(DomainSigner):
     if prep:
         sig, include_headers, sigheaders = prep
         return self.verify_sig(sig, include_headers, sigheaders[idx], dnsfunc)
+    self.logger.debug("no signature")
     return False # No signature
 
 

@@ -268,7 +268,7 @@ def RSASSA_PKCS1_v1_5_sign(hash, private_key):
     return rsa_decrypt(encoded_digest, private_key, modlen)
 
 
-def RSASSA_PKCS1_v1_5_verify(hash, signature, public_key):
+def RSASSA_PKCS1_v1_5_verify(hash, signature, public_key, logger):
     """Verify a digest signed with RFC8017 RSASSA-PKCS1-v1_5.
 
     @param hash: hash object to check
@@ -276,6 +276,7 @@ def RSASSA_PKCS1_v1_5_verify(hash, signature, public_key):
     @param public_key: public key data
     @return: True if the signature is valid, False otherwise
     """
+    logger.debug("hash %s, signature %s, public key %r" % (hash.digest().encode('hex'), signature.encode('hex'), public_key,))
     modlen = len(int2str(public_key['modulus']))
     encoded_digest = EMSA_PKCS1_v1_5_encode(hash, modlen)
     signed_digest = rsa_encrypt(signature, public_key, modlen)

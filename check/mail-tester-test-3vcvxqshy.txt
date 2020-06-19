@@ -1,0 +1,103 @@
+Received: by mail-tester.com (Postfix, from userid 500)
+	id 750A4A8160; Mon, 15 Jun 2020 04:32:48 +0200 (CEST)
+Authentication-Results: mail-tester.com;
+	dkim=pass (2048-bit key; unprotected) header.d=yahoo.ca header.i=@yahoo.ca header.b=FJXwJU3U;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=mlcirm.biz header.i=@mlcirm.biz header.b=X6s0Eqai;
+	dkim-atps=neutral
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail-tester.com
+X-Spam-Level: **
+X-Spam-Status: No/2.5/5.0
+X-Spam-Test-Scores: BODY_SINGLE_WORD=0.689,DKIM_SIGNED=0.1,DKIM_VALID=-0.1,
+	DKIM_VALID_AU=-0.1,DKIM_VALID_EF=-0.1,FREEMAIL_FROM=0.001,
+	PYZOR_CHECK=1.985,RCVD_IN_MSPIKE_H2=-0.001,SPF_PASS=-0.001,
+	URIBL_BLOCKED=0.001
+X-Spam-Last-External-IP: 66.163.185.33
+X-Spam-Last-External-HELO: sonic313-10.consmr.mail.ne1.yahoo.com
+X-Spam-Last-External-rDNS: sonic313-10.consmr.mail.ne1.yahoo.com
+X-Spam-Date-of-Scan: Mon, 15 Jun 2020 04:32:48 +0200
+X-Spam-Report: 
+	* -0.0 RCVD_IN_MSPIKE_H2 RBL: Average reputation (+2)
+	*      [66.163.185.33 listed in wl.mailspike.net]
+	*  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+	*      provider (ilatypov[at]yahoo.ca)
+	* -0.0 SPF_PASS SPF: sender matches SPF record
+	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+	*      envelope-from domain
+	*  2.0 PYZOR_CHECK Listed in Pyzor
+	*      (https://pyzor.readthedocs.io/en/latest/)
+	* -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+	*      author's domain
+	*  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+	*       valid
+	* -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+	*  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
+	*      blocked.  See
+	*      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+	*      for more information.
+	*      [URIs: mlcirm.biz]
+	*  0.7 BODY_SINGLE_WORD Message body is only one word (no spaces)
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=66.163.185.33; helo=sonic313-10.consmr.mail.ne1.yahoo.com; envelope-from=ilatypov@yahoo.ca; receiver=test-3vcvxqshy@srv1.mail-tester.com 
+DMARC-Filter: OpenDMARC Filter v1.3.1 mail-tester.com 942B0A779F
+Authentication-Results: mail-tester.com; dmarc=pass header.from=yahoo.ca
+Authentication-Results: mail-tester.com;
+	dkim=pass (2048-bit key; unprotected) header.d=yahoo.ca header.i=@yahoo.ca header.b=FJXwJU3U;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=mlcirm.biz header.i=@mlcirm.biz header.b=X6s0Eqai;
+	dkim-atps=neutral
+Received: from sonic313-10.consmr.mail.ne1.yahoo.com (sonic313-10.consmr.mail.ne1.yahoo.com [66.163.185.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mail-tester.com (Postfix) with ESMTPS id 942B0A779F
+	for <test-3vcvxqshy@srv1.mail-tester.com>; Mon, 15 Jun 2020 04:32:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1592188362; bh=15pFrAvOGi+eHKJgB6psh6iIBCbvYSuhPj+wQn6C7Ss=; h=To:Subject:From:Date:References:From:Subject; b=FJXwJU3U+W+Eo4xlupet4274ZKmQ22IaAbKZn7xAAwMICJ+2LqCgC3gSHh88u/ru06+Pty9UpLcue8t0A5INFumoQqyZ1CcPLELMNcEfY76QdH92AmFds61hY5y8alQ1vuZUmIEB9ZlYHmmlaN25gYzy6IbzJ2ccjGYqovrjPMMLBeD20U662ted2TcyVz3HoeG1aRo3zSf+FCsvgi70zw0fJVsrTQ8LOKXwzxPqtgS0scjXExEB9yJ5p8U9xwnGzED4uWvfSW9NNL5H8NsUpeAni4rU/ccYLNO8NgMcwUbDtfFP6VzwdfE+wOzm3tNQqUUNnUE5jPsL+6ysrO/wMw==
+X-YMail-OSG: HcIhlUkVM1nTAU.2sRtLas2oG.qsw0oSJxRy9_JBQ3tX9q.Wiv0BbtRcsyiB3rO
+ dkJgOmnaHwtx.gg13sMO2YnQ7BW7PuLXDVQ69x32BAjLDPDh1dyEPCElEKQxxQtq9FKfPxCv9iAb
+ FktUKVB6pbpWOPQgwT7ztoSZe5GyozaTJASjHL11k8UyHiDbhwv_lVRGqvts9QCF8pSej.j74FTY
+ 3qddgNFJzhqNPJWkfLaZs7V0mK3WWLA22WjtKWoTBtdAt4rA4eCTRvlNz0OAX8_rPCd8uxsQxXAq
+ F1XeAoVWLhGt07bWS8uAQ74NtDDP40zMwGPwtHOaGdeXIj6TqROejWu2gyF26TTjKllIaW_bXxdM
+ gNNiytMlN6LF4KcoQuivbp3S7JVs.tKzCI9dffVnyCduximz3K2PYDp3tu_bdAzI_QEPn_KdhxRl
+ cLToyCxhP7QiF0wi0xgHVH9Avv6faFP9zxWe7UJFMG5quSUhPsrND7q7gk1zBJbfxJWGhfWIwWYA
+ LAAukG5ISagN2aW07vJbsqp0W3eXa7VU4U7tVRaiaYL7Nn9OppwORruJC_agDWjbuuekhiGRhWqQ
+ XBoxh5UNMTlMOrZ5yEg.tpR592hiKmPO5fCprZNYtAusPP5G8fiOD225hZ8xa0tEZYfYUF.TMx6e
+ XwcpnHSq1ZbtF69xwvOMqX.Oyi6TcN6LxfqeNRm6tzYvtIFrDjimXX.tO_5ryKkG0m6pMl7SDBOH
+ TkiGvyT.sJOYrAToTna7D.jxau.9BQj.lGk.6JEQARFoXpvcnkTKmFqze.UZtltEpYqABtMD1ItS
+ yAm_DjAAfo4z9GRpWBnv.KU.Pqx6vsAgwDo.hSsl3KdXPRW3mk54IZoh.8vKN6YBGSasTLfQBepI
+ MTSkXeckVLaGAG7..vJcLuq91g6rm8GHTZp7aOPvM6hrDaPUXU10cURlIIp5GcGm4HBsrmnvVzdV
+ sFmuo8bJoTINmPvYtBNKhSPqu0zgNnfhyA_olK28UvJpXwdVyCaQgsshM.xqnGCShU5HRM.7EPF8
+ 3OAXIUYxxEePy6uMAl7o4N7mUmAiKJT5jGzupg0zm7jx.Ha6mA1HwgqGLzx.PrfhKUpZok0F2qWp
+ MRqnxs0nWVZwljyjh9jHCCT3tSShlSuglk8w_ykKnQPSYY4oL2uuVgFSEvQdkqHluVeBa6Nr4MPm
+ LZhl1l_c_0KoECGg.bcdhIHDqzlU9g1wQfKK.OmyGX9QKg0gUit3EH06NDTLI_V.A5ALHHaKSJEd
+ HCgLSvuTJpY.JHfa.G20PX1_fE6tBFcsmHZZJB093QhlBPHOktVED7BajZ_0kXn26L0r7O6MP_jM
+ wrRPBrbwx_d_3pTYxArMm92oVXtqEpWxgv9PKITMLKY6QBhnrXptWzwPux4OEbBF5OjCtXiGMTw5
+ vqvvvn.YcrQ8RUpSuXBBtAQ--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ne1.yahoo.com with HTTP; Mon, 15 Jun 2020 02:32:42 +0000
+Received: by smtp418.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 41fd684a3d0c1f23d03697e451f0bf04;
+          Mon, 15 Jun 2020 02:32:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mlcirm.biz;
+	 s=20200614; h=Date:From:Message-Id:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Subject:To:Sender:Reply-To:Cc:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=15pFrAvOGi+eHKJgB6psh6iIBCbvYSuhPj+wQn6C7Ss=; b=X6s0EqaiO+a5WQRE7urSo6s6uk
+	/Wl9wrYsj+O7v0fvweufeE2VdPjCTw5RyR4p+NawWvSpt7DSwhOQCaeB0srMi9AY3DEg9mVZcIySD
+	R9wlLOILCJst/kj3k/JSnEWclLl283x1mir5nixc3j5QxnyVnU0q1IItkU6OTKquLKGydX7vabg5G
+	NASQRO0+Hn2e/8Bq9BRQki4Y9rpovIhtiASZJuOvbuLLXC6fC3khxF6LrGjQXIgVkxa9//kKHvsdh
+	NIdZO1s2ewY4x3N3+4Fp0GmSZ9p+yp1AJew6IKUazqrUNgt3EsUAw/IrqKH2L6ftxitb8cZPtSgct
+	aqH7cAHg==;
+Received: from latypil by mlcirm.biz with local (Exim 4.92)
+	(envelope-from <ilatypov@yahoo.ca>)
+	id 1jkevO-0006aV-79
+	for test-3vcvxqshy@srv1.mail-tester.com; Sun, 14 Jun 2020 22:32:38 -0400
+To: test-3vcvxqshy@srv1.mail-tester.com
+Subject: foobar6
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Message-Id: <E1jkevO-0006aV-79@mlcirm.biz>
+From: ILGUIZ LATYPOV <ilatypov@yahoo.ca>
+Date: Sun, 14 Jun 2020 22:32:38 -0400
+References: <E1jkevO-0006aV-79.ref@mlcirm.biz>
+X-Mailer: WebService/1.1.16119 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
+Content-Transfer-Encoding: quoted-printable
+
+testing
+
