@@ -31,6 +31,12 @@ PYTHONPATH=.. python ../dkim/dkimverify.py -v < rfc-6376-email.txt
 
 unset PUBLIC_KEY
 export PUBLIC_KEY
+# On seeing "No module named DNS", run pip.  For example,
+# cd ..
+# source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
+# workon venv-dkim || mkvirtualenv venv-dkim
+# python setup.py install
+# cd -
 PYTHONPATH=.. python ../dkim/dkimverify.py -v --index 0 < mail-tester-test-3vcvxqshy.txt
 PYTHONPATH=.. python ../dkim/dkimverify.py -v --index 1 < mail-tester-test-3vcvxqshy.txt
 

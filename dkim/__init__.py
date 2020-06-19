@@ -70,17 +70,15 @@ from dkim.crypto import (
     RSASSA_PKCS1_v1_5_verify,
     UnparsableKeyError,
     )
-try:
+
+
+if "PUBLIC_KEY" in os.environ:
+    def get_txt(name, timeout=5):
+      return os.environ["PUBLIC_KEY"]
+else:
     from dkim.dnsplug import get_txt
-except ImportError:
-    if sys.version_info >= (3, 5):
-        try:
-            import aiodns
-            from dkim.asyncsupport import get_txt_async as get_txt
-        except:
-            # Only true if not using async
-            def get_txt(s,timeout=5):
-                raise RuntimeError("DKIM.verify requires DNS or dnspython module")
+
+
 from dkim.util import (
     get_default_logger,
     InvalidTagValueList,
@@ -486,17 +484,10 @@ def evaluate_pk(name, s, logger):
   return pk, keysize, ktag, seqtlsrpt
 
 
-def load_pk_from_dns(name, dnsfunc=get_txt, timeout=5, logger=None):
+def load_pk_from_dns(name, logger, dnsfunc=get_txt, timeout=5):
   if "PUBLIC_KEY" in os.environ:
-    s = os.environ["PUBLIC_KEY"]
-    if logger is not None:
-      logger.info("Using public key for %s from PUBLIC_KEY: %s" % (name, s,))
-  else:
-    s = dnsfunc(name, timeout=timeout)
-    if logger is not None:
-      logger.info("public key for %s: %s" % (name, s,))
-  if logger is not None:
-    logger.info("Calling evaluate_pk")
+    logger.warn("********* Using public key for %s from PUBLIC_KEY: %s" % (name, os.environ["PUBLIC_KEY"],))
+  s = dnsfunc(name, timeout=timeout)
   pk, keysize, ktag, seqtlsrpt = evaluate_pk(name, s, logger)
   logger.info("returning pk %s, keysize %s, ktag %s, seqtlsrpt %s" % (pk, keysize, ktag, seqtlsrpt))
   return pk, keysize, ktag, seqtlsrpt
@@ -732,6 +723,7 @@ class DomainSigner(object):
       h = HashThrough(hasher(), self.debug_content)
 
       body = canon_policy.canonicalize_body(self.body)
+      self.logger.debug("canon body: %r" % (body,))
       if b'l' in sig and not self.tlsrpt:
         body = body[:int(sig[b'l'])]
       h.update(body)
@@ -795,7 +787,7 @@ class DomainSigner(object):
     self.logger.debug("verify_sig calling load_pk_from_dns with name %s" % (name,))
     try:
       self.pk, self.keysize, self.ktag, self.seqtlsrpt = load_pk_from_dns(name,
-              dnsfunc, timeout=self.timeout, logger=self.logger)
+              self.logger, dnsfunc, timeout=self.timeout)
     except KeyFormatError as e:
       self.logger.error("KeyFormatError: {0}".format(e))
       return False
