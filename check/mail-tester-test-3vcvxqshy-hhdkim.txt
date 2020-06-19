@@ -1,0 +1,10 @@
+date:Sun, 14 Jun 2020 22:32:38 -0400
+from:ILGUIZ LATYPOV <ilatypov@yahoo.ca>
+message-id:<E1jkevO-0006aV-79@mlcirm.biz>
+content-transfer-encoding:quoted-printable
+content-type:text/plain; charset="UTF-8"
+mime-version:1.0
+subject:foobar6
+to:test-3vcvxqshy@srv1.mail-tester.com
+references:<E1jkevO-0006aV-79.ref@mlcirm.biz>
+dkim-signature:v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mlcirm.biz; s=20200614; h=Date:From:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:To:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive; bh=15pFrAvOGi+eHKJgB6psh6iIBCbvYSuhPj+wQn6C7Ss=; b=;
